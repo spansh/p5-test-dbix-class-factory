@@ -4,14 +4,12 @@ use strict;
 use feature qw(switch);
 use warnings;
 
-use Data::Dumper;
 use String::Random;
-use DateTime;
 use DateTime::Event::Random;
 use Carp qw( croak );
 use Moose;
 
-use vars qw( $AUTOLOAD );
+our $VERSION = 0.01;
 
 has schema => (
     is => 'rw',
