@@ -8,8 +8,6 @@ use DateTime::Event::Random;
 use Carp qw( croak );
 use Moose;
 
-our $VERSION = 0.02;
-
 has schema => (
     is => 'rw',
     isa => 'DBIx::Class::Schema',
