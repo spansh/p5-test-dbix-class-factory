@@ -1,4 +1,5 @@
 MANIFEST
+Changes
 Makefile.PL
 lib/Test/DBIx/Class/Factory.pm
 t/001_load.t
