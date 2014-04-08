@@ -1,7 +1,6 @@
 package Test::DBIx::Class::Factory;
 use strict;
 
-use feature qw(switch);
 use warnings;
 
 use String::Random;
@@ -9,7 +8,7 @@ use DateTime::Event::Random;
 use Carp qw( croak );
 use Moose;
 
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 has schema => (
     is => 'rw',
@@ -123,26 +122,19 @@ sub get_belongs_to {
 sub random_data {
     my ($self,$type) = @_;
 
-    given ($type) {
-        when (['timestamp','datetime']) {
-            my $dt = DateTime::Event::Random->datetime;
-            return $dt;
-        }
-        when ('integer') {
-            return int(rand(100));
-        }
-        when ('tinyint') {
-            return int(rand(1));
-        }
-        when ('float') {
-            return rand(100);
-        }
-        when (['text','varchar']) {
-            return $self->random_string();
-        }
-        default {
-            croak "Unknown data type $type detected, unable to generate random data";
-        }
+    if ($type eq 'timestamp' or $type eq 'datetime') {
+        my $dt = DateTime::Event::Random->datetime;
+        return $dt;
+    } elsif ($type eq 'text' or $type eq 'varchar') {
+        return $self->random_string();
+    } elsif ($type eq 'integer') {
+        return int(rand(100));
+    } elsif ($type eq 'tinyint') {
+        return int(rand(1));
+    } elsif ($type eq 'float') {
+        return rand(100);
+    } else {
+        croak "Unknown data type $type detected, unable to generate random data";
     }
 }
 
