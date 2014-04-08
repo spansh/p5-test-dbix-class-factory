@@ -1,6 +1,6 @@
 # -*- perl -*-
 
-use Test::More;
+use Test::Most;
 use Test::DBIx::Class::Factory;
 use Test::DBIx::Class {
     schema_class => 'Test::DBIx::Class::Example::Schema',

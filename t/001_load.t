@@ -1,8 +1,6 @@
 # -*- perl -*-
 
-# t/001_load.t - check module loading and create testing directory
-
-use Test::More tests => 2;
+use Test::Most tests => 2;
 use Test::DBIx::Class {
         schema_class => 'Test::DBIx::Class::Example::Schema',
 };

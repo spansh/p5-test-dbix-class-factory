@@ -14,7 +14,7 @@ WriteMakefile(
         'Moose'                     => 2.1,
     },
     TEST_REQUIRES       => {
-        'Test::More'                => 0.98,
+        'Test::Most'                => 0.33,
         'Test::DBIx::Class'         => 0.40,
         'Test::Pod::Coverage'       => 1.08,
     },
