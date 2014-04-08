@@ -1,6 +1,6 @@
 package Test::DBIx::Class::Factory;
-use strict;
 
+use strict;
 use warnings;
 
 use String::Random;
