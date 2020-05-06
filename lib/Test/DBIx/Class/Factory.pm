@@ -120,20 +120,37 @@ sub get_belongs_to {
 sub random_data {
     my ($self,$type) = @_;
 
-    if ($type eq 'timestamp' or $type eq 'datetime') {
-        my $dt = DateTime::Event::Random->datetime;
-        return $dt;
-    } elsif ($type eq 'text' or $type eq 'varchar') {
-        return $self->random_string();
-    } elsif ($type eq 'integer') {
-        return int(rand(100));
-    } elsif ($type eq 'tinyint') {
-        return int(rand(1));
-    } elsif ($type eq 'float') {
-        return rand(100);
+    my $randomizer = $self->_data_type_randomizer->{$type};
+
+    if ($randomizer) {
+        return $self->$randomizer();
     } else {
         croak "Unknown data type $type detected, unable to generate random data";
     }
+}
+
+sub random_datetime {
+    my $self = shift;
+
+    my $dt = DateTime::Event::Random->datetime;
+    return $dt;
+}
+
+sub random_integer {
+    my $self = shift;
+    my $size = shift || 100;
+
+    return int(rand(10)) % 2 if $size==1;
+
+    return int(rand($size));
+}
+
+sub random_real_number {
+    my $self = shift;
+    my $size = shift || 100;
+    my $decimals = shift || 16;
+
+    return sprintf('%.'.$decimals.'f', rand($size));
 }
 
 sub random_word {
@@ -160,6 +177,121 @@ sub random_string {
     }
     return $string;
 };
+
+sub _data_type_randomizer {
+    my $self = shift;
+    return {
+#        'bfile' => undef,
+        'bigint' => \&random_integer,
+#        'binary' => undef,
+#        'binary_double' => undef,
+#        'binary_float' => undef,
+#        'bit' => undef,
+#        'blob' => undef,
+#        'blob sub_type text' => undef,
+#        'blob sub_type text character set unicode_fss' => undef,
+        'boolean' => sub { $self->random_integer(1) },
+#        'box' => undef,
+#        'byte' => undef,
+#        'bytea' => undef,
+        'char' => \&random_string,
+#        'char for bit data' => undef,
+#        'char(x) character set unicode_fss' => undef,
+#        'cidr' => undef,
+#        'circle' => undef,
+#        'clob' => undef,
+#        'currency' => undef,
+#        'datalink' => undef,
+        'date' => \&random_datetime,
+        'datetime' => \&random_datetime,
+        'datetime year to fraction(5)' => \&random_datetime,
+#        'datetime2' => undef,
+#        'datetimeoffset' => undef,
+#        'dbclob' => undef,
+        'dec' => \&random_real_number,
+        'decimal' => \&random_real_number,
+        'double' => \&random_real_number,
+        'double precision' => \&random_real_number,
+#        'enum' => undef,
+        'float' => \&random_real_number,
+        'graphic' => \&random_string,
+#        'guid' => undef,
+#        'hierarchyid' => undef,
+#        'idssecuritylabel' => undef,
+#        'image' => undef,
+#        'inet' => undef,
+        'int' => \&random_integer,
+        'integer' => \&random_integer,
+#        'interval' => undef,
+#        'interval day to second' => undef,
+#        'interval year to month' => undef,
+#        'line' => undef,
+#        'list' => undef,
+#        'long' => undef,
+#        'long binary' => undef,
+#        'long nvarchar' => undef,
+#        'long raw' => undef,
+#        'long varbit' => undef,
+        'long varchar' => \&random_string,
+#        'long varchar for bit data' => undef,
+#        'long vargraphic' => undef,
+#        'longbinary' => undef,
+#        'longblob' => undef,
+        'longchar' => \&random_string,
+        'longtext' => \&random_string,
+#        'lseg' => undef,
+#        'lvarchar' => undef,
+#        'macaddr' => undef,
+#        'mediumblob' => undef,
+#        'mediumint' => undef,
+        'mediumtext' => \&random_string,
+#        'money' => undef,
+#        'multiset' => undef,
+        'nchar' => \&random_string,
+#        'nclob' => undef,
+#        'ntext' => undef,
+#        'number' => undef,
+#        'numeric' => undef,
+#        'nvarchar' => undef,
+#        'nvarchar2' => undef,
+#        'path' => undef,
+#        'point' => undef,
+#        'polygon' => undef,
+#        'raw' => undef,
+#        'real' => undef,
+#        'rowid' => undef,
+#        'rowversion' => undef,
+#        'set' => undef,
+        'smalldatetime' => \&random_datetime,
+        'smallint' => \&random_integer,
+#        'smallmoney' => undef,
+#        'sql_variant' => undef,
+        'text' => \&random_string,
+        'time' => \&random_datetime,
+        'time with time zone' => \&random_datetime,
+        'timestamp' => \&random_datetime,
+        'timestamp with local time zone' => \&random_datetime,
+        'timestamp with time zone' => \&random_datetime,
+#        'tinyblob' => undef,
+        'tinyint' => sub { $self->random_integer(1) },
+        'tinytext' => \&random_string,
+        'unichar' => \&random_string,
+#        'uniqueidentifier' => undef,
+#        'uniqueidentifierstr' => undef,
+        'unitext' => \&random_string,
+        'univarchar' => \&random_string,
+#        'urowid' => undef,
+        'varbinary' => \&random_string,
+#        'varbit' => undef,
+        'varchar' => \&random_string,
+#        'varchar for bit data' => undef,
+#        'varchar(x) character set unicode_fss' => undef,
+#        'varchar2' => undef,
+#        'vargraphic' => undef,
+#        'xml' => undef,
+        'year' => \&random_datetime,
+    };
+}
 
 
 =head1 NAME
@@ -282,13 +414,36 @@ timestamp etc).  It is used internally to fill in the unspecified fields
     # This will return a datetime object set to a random time/date
     my $random_data = $factory->random_data('timestamp');
 
-=head2 random_word
+=head2 random_datetime
 
-This method will create a randomised word.  It is used internally to by 
+This method will create a randomised datetime. It is internally used by
 random_data.
 
-    # This will return a random word of the format 'fdsdfas'
-    my $random_data = $factory->random_word();
+    # This will return a random DateTime object
+    my $random_data = $factory->random_datetime()
+
+=head2 random_integer
+
+This method will create a randomised integer. You can optionally specify the size
+of the integer. The size is passed as an argument to C<rand()>.
+
+    # This will return a random integer of the format '12'
+    my $random_data = $factory->random_integer();
+    # This will return a random integer between 0 and 1
+    my $random_data = $factory->random_integer(1);
+
+=head2 random_real_number
+
+This method will create a randomised real number. You can optionally specify the
+size and number of decimal places for the number. The size is passed as an argument
+to C<rand()>.
+
+    # This will return a random integer of the format '42.3176626981334'
+    my $random_data = $factory->random_real_number();
+    # This will return a random integer of the format '128.750934900508'
+    my $random_data = $factory->random_real_number(999);
+    # This will return a random integer of the format '128.75'
+    my $random_data = $factory->random_real_number(999,2);
 
 =head2 random_string
 
@@ -299,6 +454,14 @@ random_word.  You can optionally specify how many words you would like.
     my $random_data = $factory->random_string();
     # This will return a random word of the format 'fdsdfas fdsfs'
     my $random_data = $factory->random_string(2);
+
+=head2 random_word
+
+This method will create a randomised word.  It is used internally to by
+random_data.
+
+    # This will return a random word of the format 'fdsdfas'
+    my $random_data = $factory->random_word();
 
 =head1 SEE ALSO
 
