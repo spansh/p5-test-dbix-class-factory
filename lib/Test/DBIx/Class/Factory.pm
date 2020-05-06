@@ -126,14 +126,23 @@ sub random_data {
     } elsif ($type eq 'text' or $type eq 'varchar') {
         return $self->random_string();
     } elsif ($type eq 'integer') {
-        return int(rand(100));
+        return $self->random_integer(100);
     } elsif ($type eq 'tinyint') {
-        return int(rand(1));
+        return $self->random_integer(1);
     } elsif ($type eq 'float') {
         return rand(100);
     } else {
         croak "Unknown data type $type detected, unable to generate random data";
     }
+}
+
+sub random_integer {
+    my $self = shift;
+    my $size = shift || 100;
+
+    return int(rand(10)) % 2 if $size==1;
+
+    return int(rand($size));
 }
 
 sub random_word {
@@ -281,6 +290,16 @@ timestamp etc).  It is used internally to fill in the unspecified fields
     my $random_data = $factory->random_data('varchar');
     # This will return a datetime object set to a random time/date
     my $random_data = $factory->random_data('timestamp');
+
+=head2 random_integer
+
+This method will create a randomised integer. You can optionally specify the size
+of the integer. The size is passed as an argument to C<rand()>.
+
+    # This will return a random integer of the format '12'
+    my $random_data = $factory->random_integer();
+    # This will return a random integer between 0 and 1
+    my $random_data = $factory->random_integer(1);
 
 =head2 random_string
 

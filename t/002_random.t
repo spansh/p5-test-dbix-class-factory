@@ -26,6 +26,11 @@ subtest 'random_data()' => sub {
     throws_ok { $factory->random_data('unknown') } qr/Unknown data type/;
 };
 
+subtest 'random_integer()' => sub {
+    my $integer = $factory->random_integer(999);
+    like($integer,qr/^\d+$/);
+};
+
 subtest 'random_string()' => sub {
     my $string = $factory->random_string;
     like($string,qr/^[a-z ]+$/i);
