@@ -12,6 +12,20 @@ BEGIN { use_ok( 'Test::DBIx::Class::Factory' ); }
 my $schema = Schema;
 my $factory = Test::DBIx::Class::Factory->new ( schema => $schema );
 
+subtest 'random_data()' => sub {
+    my $data = $factory->random_data('text');
+    like($data,qr/^[a-z ]+$/i);
+    my $data1 = $factory->random_data('varchar');
+    like($data1,qr/^[a-z ]+$/i);
+    my $data2 = $factory->random_data('integer');
+    like($data2,qr/^\d+$/i);
+    my $data3 = $factory->random_data('tinyint');
+    like($data3,qr/^\d+$/i);
+    my $data4 = $factory->random_data('float');
+    like($data4,qr/^\d+\.\d+$/i);
+    throws_ok { $factory->random_data('unknown') } qr/Unknown data type/;
+};
+
 subtest 'random_string()' => sub {
     my $string = $factory->random_string;
     like($string,qr/^[a-z ]+$/i);
