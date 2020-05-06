@@ -36,6 +36,13 @@ subtest 'random_integer()' => sub {
     like($integer,qr/^\d+$/);
 };
 
+subtest 'random_real_number()' => sub {
+    my $real = $factory->random_real_number(999);
+    like($real,qr/^\d+\.\d+$/);
+    my $real2 = $factory->random_real_number(999,2);
+    like($real2,qr/^\d+\.\d\d$/);
+};
+
 subtest 'random_string()' => sub {
     my $string = $factory->random_string;
     like($string,qr/^[a-z ]+$/i);

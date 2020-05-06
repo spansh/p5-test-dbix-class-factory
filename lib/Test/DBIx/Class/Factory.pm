@@ -129,7 +129,7 @@ sub random_data {
     } elsif ($type eq 'tinyint') {
         return $self->random_integer(1);
     } elsif ($type eq 'float') {
-        return rand(100);
+        return $self->random_real_number(100);
     } else {
         croak "Unknown data type $type detected, unable to generate random data";
     }
@@ -149,6 +149,14 @@ sub random_integer {
     return int(rand(10)) % 2 if $size==1;
 
     return int(rand($size));
+}
+
+sub random_real_number {
+    my $self = shift;
+    my $size = shift || 100;
+    my $decimals = shift || 16;
+
+    return sprintf('%.'.$decimals.'f', rand($size));
 }
 
 sub random_word {
@@ -314,6 +322,19 @@ of the integer. The size is passed as an argument to C<rand()>.
     my $random_data = $factory->random_integer();
     # This will return a random integer between 0 and 1
     my $random_data = $factory->random_integer(1);
+
+=head2 random_real_number
+
+This method will create a randomised real number. You can optionally specify the
+size and number of decimal places for the number. The size is passed as an argument
+to C<rand()>.
+
+    # This will return a random integer of the format '42.3176626981334'
+    my $random_data = $factory->random_real_number();
+    # This will return a random integer of the format '128.750934900508'
+    my $random_data = $factory->random_real_number(999);
+    # This will return a random integer of the format '128.75'
+    my $random_data = $factory->random_real_number(999,2);
 
 =head2 random_string
 
