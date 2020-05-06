@@ -120,16 +120,10 @@ sub get_belongs_to {
 sub random_data {
     my ($self,$type) = @_;
 
-    if ($type eq 'timestamp' or $type eq 'datetime') {
-        return $self->random_datetime();
-    } elsif ($type eq 'text' or $type eq 'varchar') {
-        return $self->random_string();
-    } elsif ($type eq 'integer') {
-        return $self->random_integer(100);
-    } elsif ($type eq 'tinyint') {
-        return $self->random_integer(1);
-    } elsif ($type eq 'float') {
-        return $self->random_real_number(100);
+    my $randomizer = $self->_data_type_randomizer->{$type};
+
+    if ($randomizer) {
+        return $self->$randomizer();
     } else {
         croak "Unknown data type $type detected, unable to generate random data";
     }
@@ -183,6 +177,121 @@ sub random_string {
     }
     return $string;
 };
+
+sub _data_type_randomizer {
+    my $self = shift;
+    return {
+        'bfile' => undef,
+        'bigint' => undef,
+        'binary' => undef,
+        'binary_double' => undef,
+        'binary_float' => undef,
+        'bit' => undef,
+        'blob' => undef,
+        'blob sub_type text' => undef,
+        'blob sub_type text character set unicode_fss' => undef,
+        'boolean' => undef,
+        'box' => undef,
+        'byte' => undef,
+        'bytea' => undef,
+        'char' => undef,
+        'char for bit data' => undef,
+        'char(x) character set unicode_fss' => undef,
+        'cidr' => undef,
+        'circle' => undef,
+        'clob' => undef,
+        'currency' => undef,
+        'datalink' => undef,
+        'date' => undef,
+        'datetime' => \&random_datetime,
+        'datetime year to fraction(5)' => undef,
+        'datetime2' => undef,
+        'datetimeoffset' => undef,
+        'dbclob' => undef,
+        'dec' => undef,
+        'decimal' => undef,
+        'double' => undef,
+        'double precision' => undef,
+        'enum' => undef,
+        'float' => \&random_real_number,
+        'graphic' => undef,
+        'guid' => undef,
+        'hierarchyid' => undef,
+        'idssecuritylabel' => undef,
+        'image' => undef,
+        'inet' => undef,
+        'int' => undef,
+        'integer' => \&random_integer,
+        'interval' => undef,
+        'interval day to second' => undef,
+        'interval year to month' => undef,
+        'line' => undef,
+        'list' => undef,
+        'long' => undef,
+        'long binary' => undef,
+        'long nvarchar' => undef,
+        'long raw' => undef,
+        'long varbit' => undef,
+        'long varchar' => undef,
+        'long varchar for bit data' => undef,
+        'long vargraphic' => undef,
+        'longbinary' => undef,
+        'longblob' => undef,
+        'longchar' => undef,
+        'longtext' => undef,
+        'lseg' => undef,
+        'lvarchar' => undef,
+        'macaddr' => undef,
+        'mediumblob' => undef,
+        'mediumint' => undef,
+        'mediumtext' => undef,
+        'money' => undef,
+        'multiset' => undef,
+        'nchar' => undef,
+        'nclob' => undef,
+        'ntext' => undef,
+        'number' => undef,
+        'numeric' => undef,
+        'nvarchar' => undef,
+        'nvarchar2' => undef,
+        'path' => undef,
+        'point' => undef,
+        'polygon' => undef,
+        'raw' => undef,
+        'real' => undef,
+        'rowid' => undef,
+        'rowversion' => undef,
+        'set' => undef,
+        'smalldatetime' => undef,
+        'smallint' => undef,
+        'smallmoney' => undef,
+        'sql_variant' => undef,
+        'text' => \&random_string,
+        'time' => undef,
+        'time with time zone' => undef,
+        'timestamp' => \&random_datetime,
+        'timestamp with local time zone' => undef,
+        'timestamp with time zone' => undef,
+        'tinyblob' => undef,
+        'tinyint' => sub { $self->random_integer(1) },
+        'tinytext' => undef,
+        'unichar' => undef,
+        'uniqueidentifier' => undef,
+        'uniqueidentifierstr' => undef,
+        'unitext' => undef,
+        'univarchar' => undef,
+        'urowid' => undef,
+        'varbinary' => undef,
+        'varbit' => undef,
+        'varchar' => \&random_string,
+        'varchar for bit data' => undef,
+        'varchar(x) character set unicode_fss' => undef,
+        'varchar2' => undef,
+        'vargraphic' => undef,
+        'xml' => undef,
+        'year' => undef,
+    };
+}
 
 
 =head1 NAME
