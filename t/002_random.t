@@ -26,6 +26,11 @@ subtest 'random_data()' => sub {
     throws_ok { $factory->random_data('unknown') } qr/Unknown data type/;
 };
 
+subtest 'random_datetime()' => sub {
+    my $dt = $factory->random_datetime();
+    is(ref($dt), 'DateTime');
+};
+
 subtest 'random_integer()' => sub {
     my $integer = $factory->random_integer(999);
     like($integer,qr/^\d+$/);

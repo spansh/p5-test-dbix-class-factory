@@ -121,8 +121,7 @@ sub random_data {
     my ($self,$type) = @_;
 
     if ($type eq 'timestamp' or $type eq 'datetime') {
-        my $dt = DateTime::Event::Random->datetime;
-        return $dt;
+        return $self->random_datetime();
     } elsif ($type eq 'text' or $type eq 'varchar') {
         return $self->random_string();
     } elsif ($type eq 'integer') {
@@ -134,6 +133,13 @@ sub random_data {
     } else {
         croak "Unknown data type $type detected, unable to generate random data";
     }
+}
+
+sub random_datetime {
+    my $self = shift;
+
+    my $dt = DateTime::Event::Random->datetime;
+    return $dt;
 }
 
 sub random_integer {
@@ -290,6 +296,14 @@ timestamp etc).  It is used internally to fill in the unspecified fields
     my $random_data = $factory->random_data('varchar');
     # This will return a datetime object set to a random time/date
     my $random_data = $factory->random_data('timestamp');
+
+=head2 random_datetime
+
+This method will create a randomised datetime. It is internally used by
+random_data.
+
+    # This will return a random DateTime object
+    my $random_data = $factory->random_datetime()
 
 =head2 random_integer
 
