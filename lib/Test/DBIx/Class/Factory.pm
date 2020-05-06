@@ -282,14 +282,6 @@ timestamp etc).  It is used internally to fill in the unspecified fields
     # This will return a datetime object set to a random time/date
     my $random_data = $factory->random_data('timestamp');
 
-=head2 random_word
-
-This method will create a randomised word.  It is used internally to by 
-random_data.
-
-    # This will return a random word of the format 'fdsdfas'
-    my $random_data = $factory->random_word();
-
 =head2 random_string
 
 This method will create a randomised string.  It is used internally to by 
@@ -299,6 +291,14 @@ random_word.  You can optionally specify how many words you would like.
     my $random_data = $factory->random_string();
     # This will return a random word of the format 'fdsdfas fdsfs'
     my $random_data = $factory->random_string(2);
+
+=head2 random_word
+
+This method will create a randomised word.  It is used internally to by
+random_data.
+
+    # This will return a random word of the format 'fdsdfas'
+    my $random_data = $factory->random_word();
 
 =head1 SEE ALSO
 
